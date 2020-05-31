@@ -14,5 +14,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+
+    // execute scripts
+    try {
+
+        $cmd = "python scripts/python/ImageScript.py";
+        echo exec(escapeshellcmd($cmd));
+
+    } catch (Exception $e) {
+        dd($e->getMessage());
+    }
+
     return view('welcome');
 });
