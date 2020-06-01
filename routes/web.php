@@ -17,13 +17,20 @@ Route::get('/', function () {
 
     // execute scripts
     try {
+        // Execute Python
+        # $python = "C:/Users/Aabed/AppData/Local/Programs/Python/Python37/python.exe";
+        # $cmd = "$python scripts/python/ImageScript.py";
+        # echo exec(escapeshellcmd($cmd));
 
-        $cmd = "python scripts/python/ImageScript.py";
-        echo exec(escapeshellcmd($cmd));
+
+
+        // Execute Java
+        # shell_exec("javac scripts/java/MainApp.java");
+        # echo shell_exec("java scripts/java/MainApp");
 
     } catch (Exception $e) {
         dd($e->getMessage());
     }
 
-    return view('welcome');
+    //return view('welcome');
 });
