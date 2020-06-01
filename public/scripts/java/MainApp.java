@@ -1,4 +1,4 @@
-package application;
+package scripts.java;
 
 public class MainApp {
 	
