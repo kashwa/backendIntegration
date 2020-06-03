@@ -7,8 +7,10 @@ from PIL import Image
 
 def convertToGray(image, name):
     img_gray = image.convert('L')
-    img_gray.save(name)
-    return name
+    path = "C:\\xampp\\htdocs\\backendIntegration\\storage\\images\\"
+    path += name
+    img_gray.save(path)
+    return path
 
 
 def addLogo(gray_image, logo):
