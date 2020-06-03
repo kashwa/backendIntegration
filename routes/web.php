@@ -32,5 +32,5 @@ Route::get('/', function () {
         dd($e->getMessage());
     }
 
-    //return view('welcome');
+    // return view('welcome');
 });
