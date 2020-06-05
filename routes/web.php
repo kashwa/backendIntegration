@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    print_r(json_encode(\App\User::all()));
+    $pass = \Illuminate\Support\Facades\Hash::make('123');
+    dd([
+            'USER' => json_encode(\App\User::all()[0]),
+            'password' => $pass
+        ]);
 });
