@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
+use App\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -14,13 +16,13 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     /**
      * Get a JWT via given credentials.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function login()
     {
@@ -34,9 +36,66 @@ class AuthController extends Controller
     }
 
     /**
+     * Sign-up a user for first time.
+     * Respond with token.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function register(Request $request)
+    {
+        // TODO: Update APIS with adding api response helper.
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'email' => 'required|unique:users',
+            'password' => 'required'
+        ]);
+        if($validator->fails()){
+            return response($validator->messages(), 403);
+        }
+
+        // fetch user data.
+        $user_data = $request->only(['name', 'email', 'password']);
+
+        // create new user.
+        $user = $this->createUser($user_data);
+
+        // login created user
+        $token = auth()->login($user);
+
+        // return jwt token for that user.
+        return response()->json(array(
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'user_data' => [
+                '_id' => $user->_id,
+                'name' => $user->name,
+                'email' => $user->email
+            ]
+        ));
+
+    }
+
+    /**
+     * Create new user and return its data.
+     *
+     * @param $data
+     * @return mixed
+     */
+    protected function createUser($data)
+    {
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+        ]);
+    }
+
+    /**
      * Get the authenticated User.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function me()
     {
@@ -46,7 +105,7 @@ class AuthController extends Controller
     /**
      * Log the user out (Invalidate the token).
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function logout()
     {
@@ -58,7 +117,7 @@ class AuthController extends Controller
     /**
      * Refresh a token.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function refresh()
     {
@@ -70,7 +129,7 @@ class AuthController extends Controller
      *
      * @param  string $token
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function respondWithToken($token)
     {
