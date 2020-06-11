@@ -5,7 +5,7 @@ namespace App\Helpers;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class RestApi
+trait RestApi
 {
     /**
      * Return response with json object

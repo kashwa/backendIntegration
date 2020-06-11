@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\UserRepository;
+use App\Helpers\RestApi;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Repository\UserRepository;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    use RestApi;
+
     /**
      * @var UserRepository instance.
      */
@@ -21,6 +25,8 @@ class UserController extends Controller
 
     /**
      * UserController constructor.
+     *
+     * @param UserRepository $userRepository
      */
     public function __construct(UserRepository $userRepository)
     {
@@ -34,10 +40,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->userRepository->findAll();
-
-        // TODO: Update to use api response helper.
-        return $users;
+        return $this->sendJson($this->userRepository->findAll(), 200);
     }
 
     /**
@@ -50,29 +53,28 @@ class UserController extends Controller
     {
         $user = $this->userRepository->find($id);
 
-        // TODO: Update to use api response helper.
         if ($user)
-            return $user;
+            return $this->sendJson($user, 200);
         else
-            return response()->json(['message' => 'User Not Found!'], 200);
+            return $this->sendError(['message' => 'User Not Found!'], 404);
     }
 
     /**
      * Create new User.
      *
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
         $validator = $this->validateUserData($request->all(), $this->rule);
         if($validator->fails()){
-            return response($validator->messages(), 403);
+            return $this->sendError($validator->messages(), 400);
         }
 
         $user_data = $request->only(['name', 'email', 'password']);
         $user = $this->userRepository->create($user_data);
-        return response()->json(['message' => 'User Created Successfully!', 'user' => $user], 200);
+        return $this->sendJson(['message' => 'User Created Successfully!', 'user' => $user], 200);
     }
 
     /**
@@ -88,18 +90,18 @@ class UserController extends Controller
             'name' => 'required'
         ]);
         if($validator->fails()){
-            return response($validator->messages(), 403);
+            return $this->sendError($validator->messages(), 400);
         }
 
         // Check User Auth.
         if (!(auth()->user()->_id == $id)){
-            return response()->json(['error' => 'You can\'t modify other user\'s data']);
+            return $this->sendError(['message' => 'You can\'t modify other user\'s data'], 403);
         }
 
         $user_data = $request->only(['name', 'email', 'password']);
         $user_updated = $this->userRepository->update($id, $user_data);
         if ($user_updated) {
-            return response()->json(['message' => 'User Updated Successfully!', 'user' => $this->userRepository->find($id)], 200);
+            return $this->sendJson(['message' => 'User Updated Successfully!', 'user' => $this->userRepository->find($id)], 200);
         }
     }
 
@@ -111,7 +113,11 @@ class UserController extends Controller
      */
     public function destroy($user_id)
     {
-        return $this->userRepository->delete($user_id);
+        $user = $this->userRepository->delete($user_id);
+        if($user == 1 )
+            return $this->sendMessage(['message' => 'User Deleted Successfully'], 200);
+
+        return $this->sendMessage(['message' => 'User Not Found'], 404);
     }
 
     /**
@@ -125,6 +131,5 @@ class UserController extends Controller
     protected function validateUserData($data, $rules)
     {
         return Validator::make($data, $rules);
-
     }
 }
