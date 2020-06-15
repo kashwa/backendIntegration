@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Helpers\RestApi;
 use App\Repository\ArticleRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
@@ -65,7 +67,18 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate request
+        $validator = $this->validateArticleData($request->all(), $this->rule);
+        if($validator->fails()){
+            return $this->sendError($validator->messages(), 400);
+        }
+
+        # Add Handle to image saving.
+
+        $article_data = $request->only(['title', 'description', 'user_id']);
+        $article_data['user_id'] = auth()->user()->id;
+        $article = $this->articleRepository->create($article_data);
+        return $this->sendJson(['message' => 'Article Created Successfully!', 'article' => $article], 200);
     }
 
     /**
@@ -77,7 +90,21 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = $this->validateArticleData($request->all(), [
+            'title' => 'sometimes|required',
+            'description' => 'sometimes|required',
+        ]);
+        if($validator->fails()){
+            return $this->sendError($validator->messages(), 400);
+        }
+
+        # Handle image saving & old deleting.
+
+        $article_data = $request->only(['title', 'description', 'user_id']);
+        $article_updated = $this->articleRepository->update($id, $article_data);
+        if ($article_updated) {
+            return $this->sendJson(['message' => 'Article Updated Successfully!', 'article' => $this->articleRepository->find($id)], 200);
+        }
     }
 
     /**
@@ -93,5 +120,18 @@ class ArticleController extends Controller
             return $this->sendMessage(['message' => 'Article Deleted Successfully'], 200);
 
         return $this->sendMessage(['message' => 'Article Not Found'], 404);
+    }
+
+    /**
+     * Validate Article data.
+     * using Validator::make()
+     *
+     * @param $data
+     * @param $rules
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validateArticleData($data, $rules)
+    {
+        return Validator::make($data, $rules);
     }
 }
