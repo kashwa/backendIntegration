@@ -11,15 +11,12 @@ Route::group(['prefix' => 'auth'], function () {
 
 });
 
-// Get Users => Authenticated only.
-//Route::middleware('jwt.auth')->get('users', function (){
-//    return \App\User::all();
-//});
 
 // Providing apis for Users.
 Route::group(['middleware' => 'jwt.auth'], function (){
 
     Route::apiResource('users', 'UserController');
+    Route::apiResource('articles', 'ArticleController');
 
 });
 
