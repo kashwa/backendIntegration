@@ -26,7 +26,7 @@ trait UploaderHelper {
      * @return mixed
      */
     public function fileUpload($folder_name, $file, $file_name) {
-        $uploaded_image = $file->move(public_path($folder_name),$file_name);
+        $uploaded_image = $file->move(storage_path($folder_name),$file_name);
         return $file_name;
     }
 
@@ -80,20 +80,6 @@ trait UploaderHelper {
      * @return boolean
      */
     public function deleteFile($file_path){
-//		$root_directory = app(\Hyn\Tenancy\Website\Directory::class)->path();
-//		$path_components = explode($root_directory, $file_path);
-//		if(isset($path_components[1])){
-
-//        file_exists(public_path());
-        $arr = explode('/images/',$file_path);
-        $file_name = array_last($arr);
-        Storage::disk('s3')->delete('uploads/images/'.$file_name);
-        return true;
-//			return Storage::delete('public/'.$file_name);
-        if(\File::exists(public_path('uploads/images/'.$file_name))){
-            return \File::delete(public_path('uploads/images/'.$file_name));
-        }
-//		}
-//		return false;
+       return Storage::delete($file_path);
     }
 }
