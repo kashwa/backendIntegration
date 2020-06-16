@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\RestApi;
+use App\Helpers\UploaderHelper;
 use App\Repository\ArticleRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
-    use RestApi;
+    use RestApi, UploaderHelper;
 
     /**
      * @var ArticleRepository instance.
@@ -73,10 +74,15 @@ class ArticleController extends Controller
             return $this->sendError($validator->messages(), 400);
         }
 
-        # Add Handle to image saving.
-
         $article_data = $request->only(['title', 'description', 'user_id']);
         $article_data['user_id'] = auth()->user()->id;
+
+        # Handle to image saving.
+        if (is_file($request['image'])) {
+            $article_data['image'] = $this->articleRepository->handleImage($request['image']);
+        }
+
+
         $article = $this->articleRepository->create($article_data);
         return $this->sendJson(['message' => 'Article Created Successfully!', 'article' => $article], 200);
     }
@@ -98,9 +104,16 @@ class ArticleController extends Controller
             return $this->sendError($validator->messages(), 400);
         }
 
-        # Handle image saving & old deleting.
-
         $article_data = $request->only(['title', 'description', 'user_id']);
+
+        # Handle image saving & old deleting.
+        if ($request->has('image') && is_file($request['image'])) {
+
+            // TODO: TEST WHILE IN VUEJS or LEARN HOW TO UPLOAD IMAGE IN PUT REQUEST.
+
+            $article_data['image'] = $this->articleRepository->handleImage($request['image'], $id);
+        }
+
         $article_updated = $this->articleRepository->update($id, $article_data);
         if ($article_updated) {
             return $this->sendJson(['message' => 'Article Updated Successfully!', 'article' => $this->articleRepository->find($id)], 200);

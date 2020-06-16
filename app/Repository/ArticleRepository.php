@@ -5,9 +5,13 @@ namespace App\Repository;
 
 
 use App\Article;
+use App\Helpers\UploaderHelper;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleRepository
 {
+    use UploaderHelper;
+
     function findAll()
     {
         return Article::all();
@@ -20,11 +24,7 @@ class ArticleRepository
 
     function create($data)
     {
-        return Article::create([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'user_id' => $data['user_id'],
-        ]);
+        return Article::create($data);
     }
 
     function update($id, $data)
@@ -32,6 +32,23 @@ class ArticleRepository
         $article = $this->find($id);
 
         return $article->update($data);
+    }
+
+    function handleImage($image, $id=null)
+    {
+        # if its update.
+        if (!is_null($id)){
+            $old_img = $this->find($id)->image;
+
+            if (!is_null($old_img)){
+                $this->deleteFile('Images/'.$old_img);
+            }
+        }
+
+        #create new one and return its name
+        $extension = $image->extension();
+        $file_name = $this->generateFileRandomName($extension);
+        return $this->fileUpload('Images', $image, $file_name);
     }
 
     function delete($id)
