@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="28004382-586f-4bcb-bde9-a604792f2c7b" name="Default Changelist" comment="Add 'image' to mass-assign">
+    <list default="true" id="28004382-586f-4bcb-bde9-a604792f2c7b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/Aabed.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ArticleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ArticleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repository/ArticleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repository/ArticleRepository.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -56,8 +55,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ArticleController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="230">
-              <caret line="80" column="41" lean-forward="true" selection-start-line="80" selection-start-column="41" selection-end-line="80" selection-end-column="41" />
+            <state relative-caret-position="516">
+              <caret line="111" column="34" selection-start-line="111" selection-start-column="34" selection-end-line="111" selection-end-column="34" />
               <folding>
                 <element signature="e#40#64#0#PHP" expanded="true" />
               </folding>
@@ -127,6 +126,7 @@
       <find>error</find>
       <find>User</find>
       <find>Handle</find>
+      <find>todo</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -407,7 +407,7 @@
       <workItem from="1592211412070" duration="5979000" />
       <workItem from="1592294543009" duration="2186000" />
       <workItem from="1592314694890" duration="2125000" />
-      <workItem from="1592325604270" duration="373000" />
+      <workItem from="1592325604270" duration="1281000" />
     </task>
     <task id="LOCAL-00001" summary="Fix Mongodb connection">
       <created>1591365199381</created>
@@ -528,15 +528,21 @@
       <option name="project" value="LOCAL" />
       <updated>1592325941233</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Handle images in Store, Update">
+      <created>1592326014704</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1592326014704</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51315000" />
+    <option name="totallyTimeSpent" value="52223000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28727508" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -582,7 +588,8 @@
     <MESSAGE value="Continue CRUD for Articles, EXCEPT image-add" />
     <MESSAGE value="Update UploaderHelper methods (upload / delete)" />
     <MESSAGE value="Add 'image' to mass-assign" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add 'image' to mass-assign" />
+    <MESSAGE value="Handle images in Store, Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Handle images in Store, Update" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/config/broadcasting.php">
@@ -783,8 +790,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ArticleController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="80" column="41" lean-forward="true" selection-start-line="80" selection-start-column="41" selection-end-line="80" selection-end-column="41" />
+        <state relative-caret-position="516">
+          <caret line="111" column="34" selection-start-line="111" selection-start-column="34" selection-end-line="111" selection-end-column="34" />
           <folding>
             <element signature="e#40#64#0#PHP" expanded="true" />
           </folding>
